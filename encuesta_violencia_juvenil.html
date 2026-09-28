@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Encuesta: Violencia Juvenil</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#111,#444);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;color:#222}
+.card{max-width:650px;width:100%;background:#fff;border-radius:22px;padding:28px;box-shadow:0 15px 45px #0008}
+h1{text-align:center;margin-top:0}.sub{text-align:center;color:#666}.progress{height:10px;background:#ddd;border-radius:20px;overflow:hidden;margin:22px 0}.bar{height:100%;background:#222;width:0}
+.qnum{color:#777}.question{font-size:22px;font-weight:bold;margin:12px 0 18px}.option{display:block;width:100%;padding:14px;margin:10px 0;border:2px solid #ddd;border-radius:12px;background:#fafafa;text-align:left;font-size:16px;cursor:pointer}.option.correct{background:#d9f7df;border-color:#28a745}.option.wrong{background:#ffe0e0;border-color:#dc3545}.feedback{font-weight:bold;min-height:25px;margin:14px 0}button.next,.restart{width:100%;padding:15px;border:0;border-radius:12px;background:#222;color:#fff;font-size:17px;cursor:pointer;display:none}.restart{display:block}.footer{text-align:center;color:#888;font-size:12px;margin-top:18px}#result{text-align:center;display:none}.score{font-size:52px;font-weight:bold;margin:20px}
+</style>
+</head>
+<body>
+<div class="card">
+<div id="quiz">
+<h1>📝 Encuesta: Violencia Juvenil</h1>
+<p class="sub">Poné a prueba lo que aprendiste sobre nuestro proyecto.</p>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="qnum" id="qnum"></div><div class="question" id="question"></div>
+<div id="options"></div><div class="feedback" id="feedback"></div>
+<button class="next" id="next">Siguiente →</button>
+<div class="footer">Proyecto Sociocomunitario · Violencia Juvenil</div>
+</div>
+<div id="result"><h1>🎉 Encuesta terminada</h1><div class="score" id="score"></div><p id="message"></p><button class="restart" onclick="restart()">Volver a jugar</button></div>
+</div>
+<script>
+const qs=[
+["¿Qué es la violencia juvenil?",["Una problemática que puede afectar a jóvenes en distintos ámbitos","Solamente una pelea física","Un problema únicamente de internet","Una situación sin consecuencias"],0],
+["¿Dónde puede aparecer?",["Solo en la escuela","En la escuela, el barrio, las redes y otros espacios","Solo en la familia","Únicamente en la calle"],1],
+["¿Cuál es un ejemplo?",["Trabajar en equipo","El bullying o acoso","Ayudar a un compañero","Resolver hablando"],1],
+["¿Qué ayuda a prevenir conflictos?",["La violencia","Ignorar el problema","El diálogo y el respeto","Responder con agresiones"],2],
+["¿Cuál puede ser una consecuencia?",["Problemas de salud y convivencia","Mejor comunicación","Mayor respeto","Ninguna"],0],
+["¿Qué papel puede tener la escuela?",["Ignorar conflictos","Promover convivencia y resolución pacífica","Castigar sin escuchar","Evitar la participación"],1],
+["¿Qué actitud ayuda a resolver un conflicto?",["Gritar","Buscar culpables","Escuchar y dialogar","Responder con agresión"],2],
+["¿Puede incluir violencia digital?",["Sí","No","Solo en adultos","Solo en la escuela"],0],
+["¿Por qué es importante la participación juvenil?",["Permite conocer experiencias y pensar soluciones","Evita que participen adultos","Elimina automáticamente conflictos","Hace innecesario investigar"],0],
+["¿Qué objetivo tiene nuestro proyecto?",["Promover respeto, diálogo y prevención de la violencia","Aumentar conflictos","Evitar opiniones","Resolver con agresiones"],0]
+];
+let n=0,score=0,answered=false;
+const $=id=>document.getElementById(id);
+function show(){answered=false;let x=qs[n];$("qnum").textContent=`Pregunta ${n+1} de 10`;$("question").textContent=x[0];$("options").innerHTML="";$("feedback").textContent="";$("next").style.display="none";$("bar").style.width=(n/10*100)+"%";x[1].forEach((t,i)=>{let b=document.createElement("button");b.className="option";b.textContent=t;b.onclick=()=>answer(i);$("options").appendChild(b)})}
+function answer(i){if(answered)return;answered=true;let x=qs[n],bs=[...$("options").children];bs.forEach(b=>b.disabled=true);bs[x[2]].classList.add("correct");if(i===x[2]){score++;$("feedback").textContent="✅ ¡Correcto!"}else{bs[i].classList.add("wrong");$("feedback").textContent="❌ Incorrecto. La correcta está en verde."}$("next").style.display="block";$("next").textContent=n===9?"Ver resultado →":"Siguiente →"}
+$("next").onclick=()=>{if(n<9){n++;show()}else finish()};
+function finish(){$("quiz").style.display="none";$("result").style.display="block";$("score").textContent=score+"/10";$("message").textContent=score>=8?"¡Excelente! Tenés muy claro el tema.":score>=5?"¡Bien! Conocés varios aspectos importantes.":"Buen intento. Repasá el proyecto y volvé a intentarlo."}
+function restart(){n=0;score=0;$("result").style.display="none";$("quiz").style.display="block";show()}
+show();
+</script>
+</body>
+</html>
